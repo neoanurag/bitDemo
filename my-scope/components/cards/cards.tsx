@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
-import styled, { css } from '@emotion/native';
+import { View, Image } from 'react-native';
+import styled from '@emotion/native';
+import { CardSize, CardsProps, ThemeType } from './cards.types';
 
-const CardContainer = styled.View`
-  background-color: #fff;
+const CardContainer = styled.View<{ type: CardSize, theme: ThemeType }>`
+  background-color: ${({ theme }) =>
+    theme === ThemeType.DARK ? '#181B1F' : '#fff'};
   border-radius: 10px;
-  shadow-color: #000;
+  shadow-color: #000
   shadow-offset: {
     width: 0,
     height: 2,
@@ -13,8 +15,8 @@ const CardContainer = styled.View`
   shadow-opacity: 0.25;
   shadow-radius: 3;
   elevation: 5;
-  padding: ${({ size }) =>
-    size === 'md' ? '30px':'20px'};
+  padding: ${({ type }) =>
+    type === CardSize.SMALL ? '18px' : '24px'};
   margin: 10px;
 `;
 
@@ -24,8 +26,9 @@ const HeaderContainer = styled.View`
   align-items: center;
 `;
 
-const Divider = styled.View`
-  background-color: #E8EAED;
+const Divider = styled.View<{ theme: ThemeType }>`
+  background-color: ${({ theme }) =>
+    theme === ThemeType.DARK ? '#E8EAED' : '#64748B' };
   height: 1px;
   margin-top: 20px;
   margin-bottom: 20px
@@ -47,7 +50,6 @@ const IconWrapperRound = styled.View`
 const IconWrapper = styled.View`
   width: 40px;
   height: 40px;
-  background-color: #fff;
   justify-content: center;
   align-items: center;
 `;
@@ -56,26 +58,28 @@ const CardText = styled.Text`
   font-size: 16px;
 `;
 
-const Title = styled(Text)`
-  color: #616B7A;
-  margin-left: 20px
-  font-size: ${({ size }) =>
-    size === 'sm' ? '10px' : '14px'};
+const Title = styled.Text<{ type: CardSize, theme: ThemeType  }>`
+color: #616B7A;
+margin-left: 20px
+font-size: ${({ type }) =>
+    type === CardSize.SMALL ? '10px' : '14px'};
 `;
 
-const Subtitle = styled.Text`
+const Subtitle = styled.Text<{ type: CardSize, theme: ThemeType   }>`
   font-size: 16px;
   color: #000;
   margin-left: 20px
-  font-size: ${({ size }) =>
-    size === 'md' ? '18px' : '14px'};
+  font-size: ${({ type }) =>
+    type === CardSize.SMALL ? '14px' : '18px'};
+  color: ${({ theme }) =>
+    theme === ThemeType.DARK ? '#F8FAFC' : '#000'};
 `;
 
-const Icons = styled.Image`
-  height: ${({ size }) =>
-    size === 'md' ? '24px' : '18px'};
-  width: ${({ size }) =>
-    size === 'md' ? '24px' : '18px'};
+const Icons = styled.Image<{ type: CardSize }>`
+  height: ${({ type }) =>
+    type === CardSize.SMALL ? '18px' : '24px'};
+  width: ${({ type }) =>
+    type === CardSize.SMALL ? '18px' : '24px'};
 `;
 
 export interface CardProps {
@@ -83,53 +87,60 @@ export interface CardProps {
   header: any;
   footer: any;
   children?: any;
+  type?: any
 }
 
-const Cards: React.FC<CardProps> = ({ size = 'md', header, footer, children }) => {
+  const Cards = ({
+    children,
+    header,
+    footer,
+    size = CardSize.SMALL,
+    theme = ThemeType.LIGHT
+  }: Readonly<CardsProps>) => {
   return (
     <>
-    <CardContainer size={size}>
+    <CardContainer theme={theme} type={size}>
       {header && <HeaderContainer>{header}</HeaderContainer>}
       {children && <View>{children}</View>}
       {footer && <FooterContainer>{footer}</FooterContainer>}
     </CardContainer>
     
-    <CardContainer size={'sm'}>
+    <CardContainer theme={theme} type={size}>
       <HeaderContainer>
         <View style={{flexDirection: 'row'}}>
         <IconWrapperRound>
-        <Icons resizeMode='contain' source={require('./assets/Card.png')} />
+        <Icons type={size} resizeMode='contain' source={require('./assets/Card.png')} />
         </IconWrapperRound>
         <View style={{marginLeft: 10}}>
-        <Title>{'Standard'}</Title>
-        <Subtitle>{'$870,000'}</Subtitle>
+        <Title theme={theme} type={size}>{'Standard'}</Title>
+        <Subtitle theme={theme}  type={size}>{'$870,000'}</Subtitle>
         </View>
         </View>
         <IconWrapper>
-        <Icons resizeMode='contain' source={require('./assets/ArrowRight.png')} />
+        <Icons type={size} resizeMode='contain' source={require('./assets/ArrowRight.png')} />
         </IconWrapper>
       </HeaderContainer>
-      <Divider />
+      <Divider theme={theme} />
       {children && <View>{children}</View>}
       <FooterContainer>
-        <Title>{'Wallet ID:1234'}</Title>
+        <Title theme={theme} type={size}>{'Wallet ID:1234'}</Title>
       </FooterContainer>
     </CardContainer>
 
-    <CardContainer size={'md'}>
+    <CardContainer theme={theme} type={size}>
       <HeaderContainer>
         <View style={{flexDirection: 'row'}}>
-        <Icons style={{height: 24, width: 24}} resizeMode='contain' source={require('./assets/Eth.png')} />
+        <Icons type={size} style={{height: 24, width: 24}} resizeMode='contain' source={require('./assets/Eth.png')} />
         <View style={{marginLeft: 10}}>
-        <Subtitle style={{color: '#007BFF'}}>{'Etherum'}</Subtitle>
-        <Title>{'ETH'}</Title>
+        <Subtitle theme={theme} type={size} style={{color: '#007BFF'}}>{'Etherum'}</Subtitle>
+        <Title theme={theme} type={size}>{'ETH'}</Title>
         </View>
         </View>
         <Image resizeMode='contain' style={{height: 40, width: 200}} source={require('./assets/Area_1.png')} />
 
         <View>
-        <Subtitle>{'$2511.44'}</Subtitle>
-        <Title style={{color: '#30B866'}}>{'+2.85%'}</Title>
+        <Subtitle theme={theme}  type={size}>{'$2511.44'}</Subtitle>
+        <Title theme={theme} type={size} style={{color: '#30B866'}}>{'+2.85%'}</Title>
         </View>
       </HeaderContainer>
       {children && <View>{children}</View>}

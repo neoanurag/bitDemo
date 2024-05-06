@@ -8,8 +8,16 @@ export enum CardSize {
   MEDIUM = 'md',
 }
 
+export enum ThemeType {
+  LIGHT = 'light',
+  DARK = 'dark',
+}
+
 export interface CardsProps {
-  children: ReactNode;
-  type: CardType;
-  cardSize?: 'sm'|'md';
+  children?: ReactNode;
+  type?: CardType;
+  header?: ReactNode;
+  footer?: ReactNode;
+  size?: CardSize;
+  theme?: ThemeType
 }
